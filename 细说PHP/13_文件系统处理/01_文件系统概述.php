@@ -36,18 +36,52 @@ function get_file_pro($file_name){
         echo "$file_name 是一个文件夹\n";
     }
 
+    echo "文件类型：".get_file_type($file_name)."\n";
+    echo "文件大小：".get_file_size(filesize($file_name))."\n";
+
+    if(is_readable($file_name))  echo "文件可读\n";
+    if(is_writable($file_name))  echo "文件可写\n";
+    if(is_executable($file_name))  echo "文件可执行\n";
+
+    echo "文件创建时间: ".date('Y年m月j日', filectime($file_name))."\n";
+    echo "文件最后更尬时间: ".date('Y年m月j日', filectime($file_name))."\n";
+    echo "文件最后打开时间: ".date('Y年m月j日', filectime($file_name))."\n";
 }
 
 function get_file_type($file_name){
     switch(filetype($file_name)){
         case 'file': $file_type = '普通文件'; break;
         case 'dir' : $file_type = '目录文件'; break;
+        case 'block' : $file_type = '块设备文件'; break;
+        case 'char' : $file_type = '字符设备文件'; break;
+        case 'fifo' : $file_type = '命名管道文件'; break;
+        case 'link' : $file_type = '符号链接文件'; break;
+        case 'unknown' : $file_type = '未知类型文件'; break;
         default : $file_type = '没有检测到文件类型'; break;
     }
     return $file_type;
 }
 
-
+function get_file_size($bytes){
+    if($bytes >= pow(2, 40)){
+        $return = round($bytes / pow(1024, 4), 2);
+        $suffix = "TB";
+    } elseif ($bytes >= pow(2, 30)){
+        $return = round($bytes / pow(1024, 3), 2);
+        $suffix = "GB";
+    } elseif ($bytes >= pow(2, 20)){
+        $return = round($bytes / pow(1024, 2), 2);
+        $suffix = "MB";
+    } elseif ($bytes >= pow(2, 10)){
+        $return = round($bytes / pow(1024, 1), 2);
+        $suffix = "KB";
+    } else {
+        $return = $bytes;
+        $suffix = "Byte";
+    }
+    return $return." ".$suffix;
+}
+get_file_pro('./01_文件系统概述.php');
 
 
 
